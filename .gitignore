@@ -1,0 +1,16 @@
+# Local configuration files (contain secrets)
+.sqlcl-connections.json
+*.local.json
+~/.claude/sqlcl-connections.json
+~/.claude/settings.local.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+Thumbs.db
