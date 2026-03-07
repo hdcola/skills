@@ -1,0 +1,25 @@
+{
+  "connections": {
+    "primary": {
+      "host": "localhost",
+      "port": 1521,
+      "service": "ORCL",
+      "user": "schema_user",
+      "password": "your_password_here"
+    },
+    "secondary": {
+      "host": "localhost",
+      "port": 1521,
+      "service": "ORCL2",
+      "user": "schema_user",
+      "password": "your_password_here"
+    },
+    "production": {
+      "host": "prod-db.example.com",
+      "port": 1521,
+      "service": "PROD_DB",
+      "user": "prod_user",
+      "password": "your_password_here"
+    }
+  }
+}
