@@ -7,13 +7,13 @@ A collection of reusable skills for Claude that extend its capabilities with spe
 Skills are installed by copying the skill directory to your Claude skills folder:
 
 ```bash
-cp -r <skill-name>/ ~/.claude/skills/<skill-name>/
+cp -r skills/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 For example, to install the `oracle-sqlcl` skill:
 
 ```bash
-cp -r oracle-sqlcl/ ~/.claude/skills/oracle-sqlcl/
+cp -r skills/oracle-sqlcl/ ~/.claude/skills/oracle-sqlcl/
 ```
 
 After copying, the skill will be available in Claude Code.
@@ -40,11 +40,11 @@ Execute SQL queries directly against Oracle databases from Claude. Perfect for:
 
 **Quick Start:**
 
-1. Install SQLcl: `brew install sqlcl` (macOS) or follow [manual installation](oracle-sqlcl/SKILL.md#manual-installation-macos-or-other-platforms)
+1. Install SQLcl: `brew install sqlcl` (macOS) or follow [manual installation](skills/oracle-sqlcl/SKILL.md#manual-installation-macos-or-other-platforms)
 2. Create a config file at `~/.claude/sqlcl-connections.json` or `.sqlcl-connections.json`
-3. See [Configuration Example](oracle-sqlcl/assets/sqlcl-connections-example.json)
+3. See [Configuration Example](skills/oracle-sqlcl/assets/sqlcl-connections-example.json)
 
-For full documentation, see [oracle-sqlcl/SKILL.md](oracle-sqlcl/SKILL.md)
+For full documentation, see [skills/oracle-sqlcl/SKILL.md](skills/oracle-sqlcl/SKILL.md)
 
 ## Contributing
 
