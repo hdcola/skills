@@ -1,3 +1,7 @@
+---
+name: github-reviewer
+description: A specialized tool for automated GitHub Pull Request expert reviews with bilingual output. Performs deep code analysis and posts professional reviews in Chinese and English.
+---
 # github-reviewer
 
 A specialized tool for automated GitHub Pull Request expert reviews with bilingual output. Checks out PRs, performs deep code analysis across Correctness, Maintainability, Performance, and Security, then posts professional reviews and inline comments directly to GitHub in both Chinese and English.
