@@ -1,48 +1,69 @@
-# Claude Skills Repository
+# Agent Skills Repository
 
-A collection of reusable skills for Claude that extend its capabilities with specialized tools and workflows.
+A collection of reusable, standard Agent Skills that extend the capabilities of AI agents with specialized tools and workflows. These skills are designed to be compatible with any Agent development tool that supports the Agent Skills standard.
 
 ## Installation
 
-Skills are installed by copying the skill directory to your Claude skills folder:
+The recommended way to install a skill is using the `skills` CLI:
 
 ```bash
-cp -r skills/<skill-name>/ ~/.claude/skills/<skill-name>/
+npx skills add https://github.com/hdcola/skills --skill <skill-name>
 ```
 
 For example, to install the `oracle-sqlcl` skill:
 
 ```bash
-cp -r skills/oracle-sqlcl/ ~/.claude/skills/oracle-sqlcl/
+npx skills add https://github.com/hdcola/skills --skill oracle-sqlcl
 ```
 
-After copying, the skill will be available in Claude Code.
+Alternatively, you can manually copy the skill directory to your agent's skills folder (e.g., `~/.claude/skills/` for Claude Code):
+
+```bash
+cp -r skills/<skill-name>/ ~/.claude/skills/<skill-name>/
+```
 
 ## Available Skills
 
-| Skill            | Description                                              | Use Cases                                                                        |
-| ---------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| **oracle-sqlcl** | Execute SQL queries against Oracle databases using SQLcl | Schema inspection, data verification, debugging test results, migration planning |
+| Skill               | Description                                              | Use Cases                                                              |
+| :------------------ | :------------------------------------------------------- | :--------------------------------------------------------------------- |
+| **github-reviewer** | Automated GitHub PR expert reviews with bilingual output | Code analysis, PR feedback, automated comments, cross-language reviews |
+| **oracle-sqlcl**    | Execute SQL queries against Oracle databases using SQLcl | Schema inspection, data verification, debugging, migration planning    |
 
-### oracle-sqlcl
+### github-reviewer
 
-Execute SQL queries directly against Oracle databases from Claude. Perfect for:
+Automated GitHub Pull Request reviews that provide deep analysis and bilingual feedback.
 
-- Inspecting database schemas and table structures
-- Verifying data and running checks
-- Planning and validating database migrations
-- Debugging test results
+- **Deep Analysis**: Checks for Correctness, Maintainability, Performance, and Security.
+- **Bilingual Output**: Posts reviews and inline comments in both Simplified Chinese and English.
+- **GitHub Integration**: Uses `gh` CLI for seamless interaction with pull requests.
+- **Workflow Automation**: Automates branch checkout, diff analysis, and review posting.
 
 **Requirements:**
 
-- SQLcl installed and in PATH
-- Oracle database connection details configured
+- `gh` CLI installed and authenticated.
+- `git` installed.
+
+For full documentation, see [skills/github-reviewer-skill/SKILL.md](skills/github-reviewer-skill/SKILL.md)
+
+### oracle-sqlcl
+
+Execute SQL queries directly against Oracle databases from your agent.
+
+- **Schema Inspection**: Quickly explore table structures and relationships.
+- **Data Verification**: Run queries to verify application state or test results.
+- **Migration Support**: Plan and validate database migrations.
+- **Troubleshooting**: Debug production or staging issues directly from the chat.
+
+**Requirements:**
+
+- SQLcl installed and in PATH.
+- Oracle database connection details configured.
 
 **Quick Start:**
 
-1. Install SQLcl: `brew install sqlcl` (macOS) or follow [manual installation](skills/oracle-sqlcl/SKILL.md#manual-installation-macos-or-other-platforms)
-2. Create a config file at `~/.claude/sqlcl-connections.json` or `.sqlcl-connections.json`
-3. See [Configuration Example](skills/oracle-sqlcl/assets/sqlcl-connections-example.json)
+1. Install SQLcl: `brew install sqlcl` (macOS) or follow [manual installation](skills/oracle-sqlcl/SKILL.md#manual-installation-macos-or-other-platforms).
+2. Create a config file at `~/.claude/sqlcl-connections.json` or `.sqlcl-connections.json`.
+3. See [Configuration Example](skills/oracle-sqlcl/assets/sqlcl-connections-example.json).
 
 For full documentation, see [skills/oracle-sqlcl/SKILL.md](skills/oracle-sqlcl/SKILL.md)
 
@@ -50,7 +71,7 @@ For full documentation, see [skills/oracle-sqlcl/SKILL.md](skills/oracle-sqlcl/S
 
 To add a new skill:
 
-1. Create a directory with the skill name
-2. Include a `SKILL.md` file with skill metadata and documentation
-3. Add any supporting files (scripts, assets, references)
-4. Update this README with the skill entry
+1. Create a directory under `skills/` with the skill name.
+2. Include a `SKILL.md` file with skill metadata (YAML frontmatter) and documentation.
+3. Add any supporting files (scripts, assets, references).
+4. Update this README with the new skill entry.
