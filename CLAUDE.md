@@ -15,7 +15,7 @@ skills/
 │   ├── scripts/            # Helper bash scripts (e.g., sqlcl_query.sh)
 │   ├── assets/             # Configuration examples (e.g., sqlcl-connections-example.json)
 │   └── references/         # Additional documentation (e.g., common_queries.md)
-├── github-reviewer-skill/  # Skill for GitHub PR reviews with bilingual output
+├── github-reviewer/  # Skill for GitHub PR reviews with bilingual output
 │   └── SKILL.md            # Skill metadata and documentation
 └── README.md               # User-facing documentation for installing skills
 ```
@@ -36,7 +36,7 @@ Each skill is a self-contained directory with:
 
 ## Current Skills
 
-### github-reviewer-skill
+### github-reviewer
 - **Purpose**: Automated GitHub PR review with bilingual (Chinese/English) output
 - **Key Workflow**:
   1. Checkout PR via `gh pr checkout`
@@ -82,7 +82,7 @@ After installation, skills are immediately available based on their trigger cond
 - **Remote**: https://github.com/hdcola/skills.git
 - **Default branch**: main
 - **PRs required** for new skills (see recent commits for merge patterns)
-- **History**: Repository started with oracle-sqlcl skill, added github-reviewer-skill in later PRs
+- **History**: Repository started with oracle-sqlcl skill, added github-reviewer in later PRs
 
 ## When Adding New Skills
 
