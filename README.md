@@ -43,7 +43,7 @@ Automated GitHub Pull Request reviews that provide deep analysis and bilingual f
 - `gh` CLI installed and authenticated.
 - `git` installed.
 
-For full documentation, see [skills/github-reviewer-skill/SKILL.md](skills/github-reviewer-skill/SKILL.md)
+For full documentation, see [skills/github-reviewer/SKILL.md](skills/github-reviewer/SKILL.md)
 
 ### oracle-sqlcl
 

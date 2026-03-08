@@ -41,7 +41,7 @@ skills/
 3. 如果技能涉及复杂逻辑，建议将代码逻辑封装在 `scripts/` 目录下的脚本中，并在 `SKILL.md` 中引用。
 
 ### 2. 最佳实践
-- **双语支持**: 鼓励在输出中使用中英双语（如 `github-reviewer-skill`）。
+- **双语支持**: 鼓励在输出中使用中英双语（如 `github-reviewer`）。
 - **安全性**: 敏感配置（如密码、API Keys）应通过本地配置文件处理，并确保这些文件已列入 `.gitignore`。
 - **环境无关**: 脚本应尽可能兼容 macOS 和 Linux 环境。
 
@@ -63,5 +63,5 @@ cp -r skills/<skill-name>/ ~/.claude/skills/<skill-name>/
 - 手动运行 `scripts/` 下的脚本以确保其在当前环境下可用。
 
 ## 现有技能示例
-- **github-reviewer-skill**: 用于自动化 GitHub PR 代码审查，支持中英双语输出。
+- **github-reviewer**: 用于自动化 GitHub PR 代码审查，支持中英双语输出。
 - **oracle-sqlcl**: 用于连接并查询 Oracle 数据库。
