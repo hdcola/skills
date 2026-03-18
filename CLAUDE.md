@@ -15,8 +15,9 @@ skills/
 │   ├── scripts/            # Helper bash scripts (e.g., sqlcl_query.sh)
 │   ├── assets/             # Configuration examples (e.g., sqlcl-connections-example.json)
 │   └── references/         # Additional documentation (e.g., common_queries.md)
-├── github-reviewer/  # Skill for GitHub PR reviews with bilingual output
-│   └── SKILL.md            # Skill metadata and documentation
+├── pr-comments/            # Skill for managing GitHub PR review comments
+│   ├── SKILL.md            # Skill metadata and documentation
+│   └── scripts/            # Helper bash scripts (e.g., fetch_pending_comments.sh)
 └── README.md               # User-facing documentation for installing skills
 ```
 
@@ -36,13 +37,12 @@ Each skill is a self-contained directory with:
 
 ## Current Skills
 
-### github-reviewer
-- **Purpose**: Automated GitHub PR review with bilingual (Chinese/English) output
+### pr-comments
+- **Purpose**: Manage GitHub PR review comments (fetch/resolve)
 - **Key Workflow**:
-  1. Checkout PR via `gh pr checkout`
-  2. Analyze changes with `git diff`
-  3. Post review and inline comments via `gh` CLI
-- **Bilingual Output**: Chinese text first, then English - no explicit tags/labels
+  1. Fetch pending comments using `fetch_pending_comments.sh`
+  2. Resolve review threads using `resolve_comment_thread.sh`
+- **Safety**: Read-only operations (fetch) run freely; mutations (resolve) require user confirmation.
 
 ### oracle-sqlcl
 - **Purpose**: Execute SQL queries against Oracle databases from an agent

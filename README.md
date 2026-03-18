@@ -24,26 +24,26 @@ cp -r skills/<skill-name>/ ~/.claude/skills/<skill-name>/
 
 ## Available Skills
 
-| Skill               | Description                                              | Use Cases                                                              |
-| :------------------ | :------------------------------------------------------- | :--------------------------------------------------------------------- |
-| **github-reviewer** | Automated GitHub PR expert reviews with bilingual output | Code analysis, PR feedback, automated comments, cross-language reviews |
-| **oracle-sqlcl**    | Execute SQL queries against Oracle databases using SQLcl | Schema inspection, data verification, debugging, migration planning    |
+| Skill            | Description                                              | Use Cases                                                           |
+| :--------------- | :------------------------------------------------------- | :------------------------------------------------------------------ |
+| **pr-comments**  | Manage GitHub PR review comments (fetch/resolve)         | PR feedback management, tracking unresolved comments, closing threads |
+| **oracle-sqlcl** | Execute SQL queries against Oracle databases using SQLcl | Schema inspection, data verification, debugging, migration planning |
 
-### github-reviewer
+### pr-comments
 
-Automated GitHub Pull Request reviews that provide deep analysis and bilingual feedback.
+Manage GitHub Pull Request review comments directly from your agent.
 
-- **Deep Analysis**: Checks for Correctness, Maintainability, Performance, and Security.
-- **Bilingual Output**: Posts reviews and inline comments in both Simplified Chinese and English.
-- **GitHub Integration**: Uses `gh` CLI for seamless interaction with pull requests.
-- **Workflow Automation**: Automates branch checkout, diff analysis, and review posting.
+- **Fetch Pending Comments**: Get all unresolved review comments from a PR.
+- **Resolve Threads**: Mark review threads as resolved after addressing feedback.
+- **Flexible Input**: Supports full GitHub PR URLs or explicit owner/repo/number arguments.
+- **Safe Operations**: Read-only fetching by default; mutations require explicit user confirmation.
 
 **Requirements:**
 
 - `gh` CLI installed and authenticated.
 - `git` installed.
 
-For full documentation, see [skills/github-reviewer/SKILL.md](skills/github-reviewer/SKILL.md)
+For full documentation, see [skills/pr-comments/SKILL.md](skills/pr-comments/SKILL.md)
 
 ### oracle-sqlcl
 
