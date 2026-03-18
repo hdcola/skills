@@ -5,34 +5,50 @@
 
 set -euo pipefail
 
-# Parse input: PR number or GitHub URL
-INPUT="${1:-}"
+# Fetch unresolved review comments from a GitHub PR
+# Usage:
+#   fetch_pending_comments.sh OWNER REPO PR_NUMBER
+#   fetch_pending_comments.sh https://github.com/owner/repo/pull/123
 
-# If no input provided, try to get the current PR number
-if [[ -z "$INPUT" ]]; then
-    INPUT=$(gh pr view --json number -q .number 2>/dev/null || echo "")
-    if [[ -z "$INPUT" ]]; then
-        echo "❌ Error: Could not determine PR. Please provide a PR number or GitHub URL."
-        exit 1
-    fi
+if [[ $# -eq 0 ]]; then
+    echo "❌ Error: Missing arguments."
+    echo ""
+    echo "Usage:"
+    echo "  Option A (URL):  fetch_pending_comments.sh https://github.com/owner/repo/pull/123"
+    echo "  Option B (args): fetch_pending_comments.sh owner repo 123"
+    exit 1
 fi
 
-# Determine repo and PR number
-if [[ $INPUT =~ github\.com/([^/]+)/([^/]+)/pull/([0-9]+) ]]; then
-    OWNER="${BASH_REMATCH[1]}"
-    REPO_NAME="${BASH_REMATCH[2]}"
-    PR_NUMBER="${BASH_REMATCH[3]}"
-elif [[ $INPUT =~ ^[0-9]+$ ]]; then
-    # Get default repo info
-    REPO_INFO=$(gh repo view --json owner,name -q '.owner.login + " " + .name' 2>/dev/null)
-    if [[ -z "$REPO_INFO" ]]; then
-        echo "❌ Error: Could not determine default repository. Please provide a full GitHub URL."
+# Parse input: either a URL or three arguments
+if [[ $# -eq 1 ]]; then
+    # Parse GitHub URL format
+    INPUT="$1"
+    if [[ $INPUT =~ github\.com/([^/]+)/([^/]+)/pull/([0-9]+) ]]; then
+        OWNER="${BASH_REMATCH[1]}"
+        REPO_NAME="${BASH_REMATCH[2]}"
+        PR_NUMBER="${BASH_REMATCH[3]}"
+    else
+        echo "❌ Error: Invalid GitHub URL format."
+        echo "Expected: https://github.com/owner/repo/pull/123"
         exit 1
     fi
-    read -r OWNER REPO_NAME <<< "$REPO_INFO"
-    PR_NUMBER="$INPUT"
+elif [[ $# -eq 3 ]]; then
+    # Parse explicit owner/repo/number format
+    OWNER="$1"
+    REPO_NAME="$2"
+    PR_NUMBER="$3"
+
+    # Validate PR_NUMBER is numeric
+    if ! [[ $PR_NUMBER =~ ^[0-9]+$ ]]; then
+        echo "❌ Error: PR_NUMBER must be numeric. Got: $PR_NUMBER"
+        exit 1
+    fi
 else
-    echo "❌ Error: Input must be a PR number or GitHub URL (e.g., 123 or https://github.com/owner/repo/pull/123)."
+    echo "❌ Error: Invalid number of arguments ($#)."
+    echo ""
+    echo "Usage:"
+    echo "  Option A (URL):  fetch_pending_comments.sh https://github.com/owner/repo/pull/123"
+    echo "  Option B (args): fetch_pending_comments.sh owner repo 123"
     exit 1
 fi
 

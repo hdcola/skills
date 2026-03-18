@@ -1,6 +1,6 @@
 ---
 name: pr-comments
-description: 获取 GitHub PR 的未解决评论（PENDING）或将评论标记为已解决（Resolved）。支持通过 PR 编号或 URL 操作。
+description: Fetch unresolved review comments from a GitHub PR or mark comments as resolved. Requires explicit repository context (GitHub URL or owner/repo/number). Use this when managing PR review feedback, checking pending comments, or marking review threads as resolved. Supports full GitHub URLs (most reliable) or explicit owner/repo/PR-number arguments.
 ---
 
 # GitHub PR Review Comment Manager
@@ -11,22 +11,32 @@ This skill provides tools for fetching unresolved (PENDING) review comments and 
 
 ### Fetch Pending Comments [READ-ONLY]
 
-Get all unresolved review comments from a PR:
+Get all unresolved review comments from a PR. **Requires explicit repository context** — you must provide either a full GitHub URL or owner/repo/number:
 
 ```bash
-bash scripts/fetch_pending_comments.sh [PR_NUMBER_OR_URL]
+bash scripts/fetch_pending_comments.sh OWNER REPO PR_NUMBER
+# OR
+bash scripts/fetch_pending_comments.sh https://github.com/owner/repo/pull/123
 ```
 
-**Input flexibility:**
-- `123` — Uses the current repository and PR #123
-- `https://github.com/owner/repo/pull/123` — Full GitHub URL
-- (no args) — Fetches comments from the currently checked-out PR if in a git repo
+**Input format (choose one):**
+- **Option A (URL):** `https://github.com/owner/repo/pull/123` — Full GitHub URL (most reliable)
+- **Option B (explicit):** `owner repo 123` — Three arguments: owner, repo name, PR number
 
 **Output format:** Displays unresolved comments with:
 - Thread ID
 - File path and line range
 - Author name
 - Comment text (truncated to single line)
+
+**Example usage:**
+```bash
+# Using URL (recommended)
+bash scripts/fetch_pending_comments.sh https://github.com/anthropics/claude-code/pull/42
+
+# Using explicit arguments
+bash scripts/fetch_pending_comments.sh anthropics claude-code 42
+```
 
 **Example output:**
 ```
@@ -52,8 +62,9 @@ bash scripts/resolve_comment_thread.sh THREAD_ID [THREAD_ID2 ...]
 
 ### Typical Usage Pattern
 
-1. **User:** "Check pending comments on PR #123"
-   - Run: `bash scripts/fetch_pending_comments.sh 123`
+1. **User:** "Check pending comments on this PR"
+   - If user provides: URL → `bash scripts/fetch_pending_comments.sh https://github.com/owner/repo/pull/123`
+   - If user provides: owner, repo, PR number → `bash scripts/fetch_pending_comments.sh owner repo 123`
    - Display results to user
 
 2. **User:** "Resolve these three: [ID1] [ID2] [ID3]"
@@ -64,6 +75,7 @@ bash scripts/resolve_comment_thread.sh THREAD_ID [THREAD_ID2 ...]
 
 ## Important Rules
 
+- **Explicit context required**: Always provide full GitHub URL or explicit owner/repo/number. Do NOT rely on git repository context — this ensures scripts work reliably from any directory.
 - **Scope**: This skill handles ONLY review comment workflow — it does not modify source code or PR content.
 - **Safety**: Read-only operations (fetch) run freely. Mutations (resolve) require explicit user confirmation first.
 - **Error handling**: Scripts include validation and report errors clearly with actionable messages.
