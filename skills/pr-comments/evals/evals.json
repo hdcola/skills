@@ -1,0 +1,26 @@
+{
+  "skill_name": "pr-comments",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "我需要检查 anthropic/claude-code 这个仓库的 PR #1234 中有哪些待解决的代码审查评论。能帮我列出来吗？",
+      "expected_output": "Fetches and displays all pending review comments from the PR with thread IDs, file paths, line numbers, authors, and comment text",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 1,
+      "prompt": "在当前仓库的 PR 中，获取所有的 pending 评论。",
+      "expected_output": "Uses current PR context to fetch pending comments without requiring explicit PR specification",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "prompt": "我已经解决了 MDExOlB1bGxSZXF1ZXN0UmV2aWV3VGhyZWFk1234567890= 和 MDExOlB1bGxSZXF1ZXN0UmV2aWV3VGhyZWFk0987654321= 这两个线程的问题，能帮我把它们标记为已解决吗？",
+      "expected_output": "Confirms with user before executing, then resolves specified thread IDs and reports success/failure for each",
+      "files": [],
+      "assertions": []
+    }
+  ]
+}
