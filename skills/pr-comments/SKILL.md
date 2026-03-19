@@ -11,17 +11,20 @@ This skill provides tools for fetching unresolved (PENDING) review comments and 
 
 ### Fetch Pending Comments [READ-ONLY]
 
-Get all unresolved review comments from a PR. **Requires explicit repository context** — you must provide either a full GitHub URL or owner/repo/number:
+Get all unresolved review comments from a PR. **Requires explicit repository context** unless providing just the PR number in a git repository:
 
 ```bash
-bash scripts/fetch_pending_comments.sh OWNER REPO PR_NUMBER
+bash scripts/fetch_pending_comments.sh PR_NUMBER
 # OR
 bash scripts/fetch_pending_comments.sh https://github.com/owner/repo/pull/123
+# OR
+bash scripts/fetch_pending_comments.sh OWNER REPO PR_NUMBER
 ```
 
 **Input format (choose one):**
-- **Option A (URL):** `https://github.com/owner/repo/pull/123` — Full GitHub URL (most reliable)
-- **Option B (explicit):** `owner repo 123` — Three arguments: owner, repo name, PR number
+- **Option A (Number):** `123` — Just the PR number (autodetects current repo via `gh repo view`)
+- **Option B (URL):** `https://github.com/owner/repo/pull/123` — Full GitHub URL (most reliable)
+- **Option C (explicit):** `owner repo 123` — Three arguments: owner, repo name, PR number
 
 **Output format:** Displays unresolved comments with:
 - Thread ID
@@ -31,11 +34,11 @@ bash scripts/fetch_pending_comments.sh https://github.com/owner/repo/pull/123
 
 **Example usage:**
 ```bash
+# Using PR number (autodetect repo)
+bash scripts/fetch_pending_comments.sh 42
+
 # Using URL (recommended)
 bash scripts/fetch_pending_comments.sh https://github.com/anthropics/claude-code/pull/42
-
-# Using explicit arguments
-bash scripts/fetch_pending_comments.sh anthropics claude-code 42
 ```
 
 **Example output:**

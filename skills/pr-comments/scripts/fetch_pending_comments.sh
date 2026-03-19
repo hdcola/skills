@@ -19,17 +19,27 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-# Parse input: either a URL or three arguments
+# Parse input: either a URL, a single PR number, or three arguments
 if [[ $# -eq 1 ]]; then
-    # Parse GitHub URL format
     INPUT="$1"
+    # Case 1: GitHub URL
     if [[ $INPUT =~ github\.com/([^/]+)/([^/]+)/pull/([0-9]+) ]]; then
         OWNER="${BASH_REMATCH[1]}"
         REPO_NAME="${BASH_REMATCH[2]}"
         PR_NUMBER="${BASH_REMATCH[3]}"
+    # Case 2: Numeric PR number only
+    elif [[ $INPUT =~ ^[0-9]+$ ]]; then
+        PR_NUMBER="$INPUT"
+        # Detect current repo using gh cli
+        if ! REPO_JSON=$(gh repo view --json owner,name 2>/dev/null); then
+            echo "❌ Error: Could not detect current repository. Please provide a full URL or owner/repo/number."
+            exit 1
+        fi
+        OWNER=$(echo "$REPO_JSON" | /usr/bin/jq -r '.owner.login')
+        REPO_NAME=$(echo "$REPO_JSON" | /usr/bin/jq -r '.name')
     else
-        echo "❌ Error: Invalid GitHub URL format."
-        echo "Expected: https://github.com/owner/repo/pull/123"
+        echo "❌ Error: Invalid input format. Expected a GitHub URL or a numeric PR number."
+        echo "Got: $INPUT"
         exit 1
     fi
 elif [[ $# -eq 3 ]]; then
