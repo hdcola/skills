@@ -1,11 +1,23 @@
 #!/bin/bash
 
 # Test script for fetch_pending_comments.sh improvements
-# Tests all three input options and error cases
+# Tests all four input options and error cases
+#
+# Configuration via environment variables:
+#   TEST_REPO_OWNER - GitHub owner (default: hugcanada)
+#   TEST_REPO_NAME  - GitHub repo name (default: insurfactapps)
+#   TEST_PR_NUMBER  - PR number to test with (default: 216)
+#
+# Example: TEST_REPO_OWNER=myorg TEST_REPO_NAME=myrepo TEST_PR_NUMBER=42 bash test_script.sh
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FETCH_SCRIPT="$SCRIPT_DIR/scripts/fetch_pending_comments.sh"
 TEST_DIR="/tmp/pr_comments_test_$$"
+
+# Configuration with environment variable defaults
+TEST_REPO_OWNER="${TEST_REPO_OWNER:-hugcanada}"
+TEST_REPO_NAME="${TEST_REPO_NAME:-insurfactapps}"
+TEST_PR_NUMBER="${TEST_PR_NUMBER:-216}"
 
 # Colors for output
 PASS='\033[0;32m'
@@ -48,6 +60,16 @@ fi
 # Make sure script is executable
 chmod +x "$FETCH_SCRIPT"
 
+# Check if gh is authenticated
+if ! gh auth status >/dev/null 2>&1; then
+    echo -e "${FAIL}✗ ERROR${NC}: GitHub CLI is not authenticated"
+    echo "Please run: gh auth login"
+    exit 1
+fi
+
+print_info "Using test repo: $TEST_REPO_OWNER/$TEST_REPO_NAME#$TEST_PR_NUMBER"
+print_info "GitHub authenticated as: $(gh api user --jq .login 2>/dev/null || echo 'unknown')"
+
 # Cleanup function
 cleanup() {
     cd /
@@ -63,7 +85,7 @@ cd "$TEST_DIR"
 
 print_test_header "1. Test Option B (GitHub URL)"
 ((TESTS_RUN++))
-if bash "$FETCH_SCRIPT" "https://github.com/hugcanada/insurfactapps/pull/216" > /dev/null 2>&1; then
+if bash "$FETCH_SCRIPT" "https://github.com/$TEST_REPO_OWNER/$TEST_REPO_NAME/pull/$TEST_PR_NUMBER" > /dev/null 2>&1; then
     print_pass "Option B: GitHub URL works from non-git directory"
 else
     print_fail "Option B: GitHub URL should work from anywhere"
@@ -71,7 +93,7 @@ fi
 
 print_test_header "2. Test Option C (Explicit owner/repo/number)"
 ((TESTS_RUN++))
-if bash "$FETCH_SCRIPT" hugcanada insurfactapps 216 > /dev/null 2>&1; then
+if bash "$FETCH_SCRIPT" "$TEST_REPO_OWNER" "$TEST_REPO_NAME" "$TEST_PR_NUMBER" > /dev/null 2>&1; then
     print_pass "Option C: Explicit owner/repo/number works"
 else
     print_fail "Option C: Explicit owner/repo/number should work"
@@ -79,7 +101,7 @@ fi
 
 print_test_header "3. Test Option A (PR number only) from non-git directory"
 ((TESTS_RUN++))
-OUTPUT=$( bash "$FETCH_SCRIPT" 216 2>&1 || true )
+OUTPUT=$( bash "$FETCH_SCRIPT" "$TEST_PR_NUMBER" 2>&1 || true )
 if echo "$OUTPUT" | grep -q "not in a git repository\|couldn't auto-detect\|requires running from a git repository"; then
     print_pass "Option A: Clear error message when not in git repo"
 else
@@ -99,7 +121,7 @@ if [[ -z "$TEST_REPO" ]] || [[ ! -d "$TEST_REPO/.git" ]]; then
 else
     # We have a git repo - test Option A (PR number only) from there
     # Use a non-existent PR to test error handling
-    OUTPUT=$( (cd "$TEST_REPO" && bash "$FETCH_SCRIPT" 999999 2>&1) || true )
+    OUTPUT=$( (cd "$TEST_REPO" && bash "$FETCH_SCRIPT" 999999999 2>&1) || true )
 
     # Check that the error is NOT about git context (which would mean Option A failed)
     # It should be about the PR not existing or GraphQL error (which means Option A succeeded)

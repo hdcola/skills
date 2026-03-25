@@ -49,12 +49,12 @@ ID: PRRT_kwDOQFTPGc51yyDP | apps/IFCAdmin/app/assets/layout/_menu.scss:90 | @rev
 
 The skill accepts four formats. Choose based on your situation:
 
-| Option | Example | Reliability | When to use |
+| Option | Example | Dependencies | When to use |
 |--------|---------|-------------|------------|
-| **0** ⭐⭐ | (no arguments) | **Excellent** — Most convenient | When working on a PR branch (must run from git repo) |
-| **A** ⚠️ | `216` | **Requires Git Repo** — Must run from git repo with remote origin configured | When you know the PR number and are in the project directory |
-| **B** ⭐ | `https://github.com/owner/repo/pull/123` | **Excellent** — Works anywhere, no dependencies | **Recommended** — Always works if you have the URL |
-| **C** | `owner repo 123` | **Works Anywhere** — No dependencies | When you know the owner/repo details |
+| **0** ⭐⭐ | (no arguments) | `gh`, `jq`, `git` | When working on a PR branch (must run from git repo) |
+| **A** ⚠️ | `216` | `gh`, `jq`, `git` — Must run from git repo with remote origin configured | When you know the PR number and are in the project directory |
+| **B** ⭐ | `https://github.com/owner/repo/pull/123` | `gh`, `jq` (no git needed) | **Recommended** — Works anywhere without a git repository |
+| **C** | `owner repo 123` | `gh`, `jq` (no git needed) | When you know the owner/repo details, works anywhere |
 
 **Option 0 (Current Branch):**
 - No arguments needed — just run `/pr-comments`

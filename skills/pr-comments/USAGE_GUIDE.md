@@ -158,8 +158,8 @@ gh auth login
 
 ### "Not a GitHub repository" or similar errors
 
-**Cause:** Your repository isn't on GitHub or `gh` isn't properly configured
-**Solution:** Use Option B (URL) which doesn't need GitHub CLI configuration
+**Cause:** `gh` isn't properly authenticated or you're not in a git repository (for Option A)
+**Solution:** Use Option B (GitHub URL) or C (explicit args). Both work without a git repo, but still require GitHub CLI to be installed and authenticated.
 
 ---
 
@@ -167,9 +167,9 @@ gh auth login
 
 | Option | Syntax | Works from anywhere? | Requires git repo? |
 |--------|--------|----------------------|-------------------|
-| A | `sh fetch_pending_comments.sh 216` | ❌ | ✅ |
-| B | `sh fetch_pending_comments.sh https://github.com/o/r/pull/216` | ✅ | ❌ |
-| C | `sh fetch_pending_comments.sh owner repo 216` | ✅ | ❌ |
+| A | `bash fetch_pending_comments.sh 216` | ❌ | ✅ |
+| B | `bash fetch_pending_comments.sh https://github.com/o/r/pull/216` | ✅ | ❌ |
+| C | `bash fetch_pending_comments.sh owner repo 216` | ✅ | ❌ |
 
 ---
 

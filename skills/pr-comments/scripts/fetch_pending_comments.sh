@@ -9,8 +9,9 @@
 
 set -euo pipefail
 
-# Check for required dependencies
-for cmd in gh git jq; do
+# Function to check if a command exists
+require_cmd() {
+    local cmd="$1"
     if ! command -v "$cmd" >/dev/null 2>&1; then
         echo "❌ Error: '$cmd' is not installed or not in PATH." >&2
         echo "" >&2
@@ -24,7 +25,13 @@ for cmd in gh git jq; do
         fi
         exit 1
     fi
-done
+}
+
+# Check for common dependencies (always needed)
+require_cmd "gh"
+require_cmd "jq"
+
+# Note: git is checked conditionally below based on input format
 
 # Determine whether to use colors in output
 COLOR_ENABLED=true
@@ -177,7 +184,8 @@ get_pr_from_current_branch() {
 
 # Parse input: no args (current branch), PR number, URL, or three arguments
 if [[ $# -eq 0 ]]; then
-    # Option 0: No arguments - query from current branch
+    # Option 0: No arguments - query from current branch (requires git)
+    require_cmd "git"
     if ! validate_git_context; then
         print_error "Branch-based PR lookup requires running from a git repository."
         echo "" >&2
@@ -215,9 +223,12 @@ elif [[ $# -eq 1 ]]; then
         OWNER="${BASH_REMATCH[1]}"
         REPO_NAME="${BASH_REMATCH[2]}"
         PR_NUMBER="${BASH_REMATCH[3]}"
-    # Case 2: Numeric PR number only - auto-detect repo
+    # Case 2: Numeric PR number only - auto-detect repo (requires git)
     elif [[ $INPUT =~ ^[0-9]+$ ]]; then
         PR_NUMBER="$INPUT"
+
+        # Require git for auto-detection
+        require_cmd "git"
 
         # Validate we're in a proper git repo context
         if ! validate_git_context; then
@@ -390,6 +401,17 @@ if echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1; then
     echo "  • PR #$PR_NUMBER does not exist in $OWNER/$REPO_NAME" >&2
     echo "  • Authentication failed (verify with: gh auth status)" >&2
     echo "  • Rate limit exceeded" >&2
+    exit 1
+fi
+
+# Check if the PR itself exists (pullRequest can be null even without GraphQL errors)
+if echo "$RESPONSE" | jq -e '.data.repository.pullRequest' >/dev/null 2>&1; then
+    if [ "$(echo "$RESPONSE" | jq -r '.data.repository.pullRequest')" = "null" ]; then
+        print_error "PR #$PR_NUMBER does not exist in $OWNER/$REPO_NAME"
+        exit 1
+    fi
+else
+    print_error "Could not retrieve PR information from GitHub API"
     exit 1
 fi
 
