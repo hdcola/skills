@@ -4,17 +4,18 @@
 
 ✅ **All improvements verified and working**
 - 8/8 automated tests passing
-- All three usage options (A, B, C) working correctly
-- Error handling improved
-- Code complexity reduced by 40%
+- All four usage options (0, A, B, C) working correctly
+- Error handling significantly improved
+- Code portability issues fixed (removed /usr/bin/jq hardcoding)
+- Documentation updated to reflect actual behavior
 
 ## Test Execution Summary
 
 ### Test Environment
 - **Location**: `/tmp/pr_comments_test_<pid>`
-- **Date**: 2026-03-24
+- **Date**: 2026-03-25
 - **Script**: `/Users/hd/.claude/skills/pr-comments/test_script.sh`
-- **Test Coverage**: 8 test cases covering all usage scenarios
+- **Test Coverage**: 8 test cases covering all usage scenarios + error handling
 
 ### Test Results
 

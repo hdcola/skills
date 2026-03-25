@@ -12,42 +12,37 @@ The original `fetch_pending_comments.sh` script had three main issues:
 
 ## Solutions Implemented
 
-### 1. Removed Git Repo Requirement
+### 1. Added Option 0: Current Branch Lookup
 
-**Before:**
-```bash
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    # Error: Must be in git repo
-    exit 1
-fi
-```
+**New Feature**: Users can now run `/pr-comments` with no arguments to automatically lookup the PR associated with their current branch.
 
-**After:**
-```bash
-if git rev-parse --git-dir > /dev/null 2>&1; then
-    # Try to auto-detect from git
-else
-    # Still works with explicit options
-    print_error "PR number only works when run from a git repository"
-    # Suggests alternatives (Option B and C)
-fi
-```
+**How it works:**
+- Detects current branch name via `git rev-parse --abbrev-ref HEAD`
+- Queries GitHub for the PR associated with that branch
+- Auto-detects owner/repo like Option A does
 
-**Result**: The script gracefully degrades. Option A now:
-- Works perfectly when run from a git repo
-- Provides clear guidance when run outside a git repo
-- Directs users to Options B and C as alternatives
+**Result**: Three convenient ways to invoke the skill:
+- **Option 0 (Most Convenient)**: `/pr-comments` — works from a git repo with an active PR
+- **Option A**: `/pr-comments 216` — works from a git repo, specify PR number
+- **Option B (Most Portable)**: `/pr-comments https://github.com/owner/repo/pull/123` — works anywhere
+- **Option C**: `/pr-comments owner repo 123` — works anywhere with explicit args
 
-### 2. Simplified Logic Flow
+**Note**: Options 0 and A still require being in a git repository with a configured remote origin. This is by design to enable auto-detection. For portable usage, use Options B or C.
 
-Removed the `validate_repo_context()` function entirely. It was:
-- Checking git remote URLs unnecessarily
-- Adding complexity without adding value
-- Potential source of false negatives
+### 2. Improved Error Detection and Messages
 
-The new code is **80% shorter** in the argument parsing section while being more robust.
+**Enhancements:**
+- Added `get_pr_from_current_branch()` function for Option 0
+- Improved `validate_git_context()` to remove dead code
+- Better stderr handling to distinguish between different error types
+- `verify_repo_exists()` now returns different exit codes for auth failures vs. rate limits
 
-### 3. Improved Error Messages
+**Result**:
+- Users get specific, actionable error messages
+- Auth and rate-limit issues are now clearly identified
+- Users are guided to appropriate alternatives when auto-detection fails
+
+### 3. Fixed Portability Issues
 
 **Old error message** (4+ paragraphs, hard to understand):
 ```

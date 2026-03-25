@@ -51,16 +51,18 @@ The skill accepts four formats. Choose based on your situation:
 
 | Option | Example | Reliability | When to use |
 |--------|---------|-------------|------------|
-| **0** ⭐⭐ | (no arguments) | **Excellent** — Most convenient, queries from branch | When working on a PR branch (recommended) |
-| **A** ⚠️ | `216` | Moderate — Can fail if not in exact repo | When you know the PR number |
-| **B** ⭐ | `https://github.com/owner/repo/pull/123` | **Excellent** — Explicit, works anywhere | Always works if you have the URL |
-| **C** | `owner repo 123` | Good — Works anywhere | When you know the owner/repo details |
+| **0** ⭐⭐ | (no arguments) | **Excellent** — Most convenient | When working on a PR branch (must run from git repo) |
+| **A** ⚠️ | `216` | **Requires Git Repo** — Must run from git repo with remote origin configured | When you know the PR number and are in the project directory |
+| **B** ⭐ | `https://github.com/owner/repo/pull/123` | **Excellent** — Works anywhere, no dependencies | **Recommended** — Always works if you have the URL |
+| **C** | `owner repo 123` | **Works Anywhere** — No dependencies | When you know the owner/repo details |
 
 **Option 0 (Current Branch):**
 - No arguments needed — just run `/pr-comments`
 - Queries GitHub for the PR associated with your current branch
-- **Requires:** Running from project root, current branch must have a PR on GitHub
+- **Requires:** Must run from project root (a git repo with remote origin)
 - **Most convenient** for developers actively working on a PR
+
+**Key Point:** Options 0 and A both require running from a git repository with a configured remote origin. For maximum portability, use Option B (GitHub URL) or C (explicit owner/repo).
 
 **Why Option A can fail:**
 - If you run the script from a directory inside a monorepo or nested git structure, auto-detection might find the wrong repository

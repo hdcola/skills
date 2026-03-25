@@ -52,12 +52,12 @@ EOF
 
 # Validate working directory context (for PR number auto-detection)
 validate_git_context() {
-    local git_dir
-    if ! git_dir=$(git rev-parse --git-dir 2>/dev/null); then
+    # Check if we're in a git repo
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
         return 1
     fi
 
-    # Try to detect the remote origin URL to verify we're in the right repo
+    # Check if remote origin is configured
     if ! git config --get remote.origin.url > /dev/null 2>&1; then
         return 1
     fi
@@ -69,11 +69,19 @@ validate_git_context() {
 verify_repo_exists() {
     local owner="$1"
     local repo="$2"
+    local api_error
 
     # Try to fetch basic repo info to verify it's accessible
-    if ! gh api repos/"$owner"/"$repo" --jq .name >/dev/null 2>&1; then
-        return 1
-    fi
+    api_error=$(gh api repos/"$owner"/"$repo" --jq .name 2>&1) || {
+        # Check if it's an auth issue
+        if echo "$api_error" | grep -qi "unauthorized\|authentication\|forbidden"; then
+            return 2  # Auth error
+        elif echo "$api_error" | grep -qi "rate limit"; then
+            return 3  # Rate limit
+        else
+            return 1  # Repo not found or other error
+        fi
+    }
 
     return 0
 }
@@ -144,8 +152,8 @@ if [[ $# -eq 0 ]]; then
 
     # Now auto-detect owner/repo like we do for PR numbers
     if REPO_JSON=$(gh repo view --json owner,name 2>/dev/null); then
-        OWNER=$(echo "$REPO_JSON" | /usr/bin/jq -r '.owner.login' 2>/dev/null || echo "")
-        REPO_NAME=$(echo "$REPO_JSON" | /usr/bin/jq -r '.name' 2>/dev/null || echo "")
+        OWNER=$(echo "$REPO_JSON" | jq -r '.owner.login' 2>/dev/null || echo "")
+        REPO_NAME=$(echo "$REPO_JSON" | jq -r '.name' 2>/dev/null || echo "")
 
         if [[ -z "$OWNER" ]] || [[ -z "$REPO_NAME" ]]; then
             print_error "Failed to parse repository information from 'gh repo view'."
@@ -189,8 +197,8 @@ elif [[ $# -eq 1 ]]; then
 
         # Try to detect repo from current git context
         if REPO_JSON=$(gh repo view --json owner,name 2>/dev/null); then
-            OWNER=$(echo "$REPO_JSON" | /usr/bin/jq -r '.owner.login' 2>/dev/null || echo "")
-            REPO_NAME=$(echo "$REPO_JSON" | /usr/bin/jq -r '.name' 2>/dev/null || echo "")
+            OWNER=$(echo "$REPO_JSON" | jq -r '.owner.login' 2>/dev/null || echo "")
+            REPO_NAME=$(echo "$REPO_JSON" | jq -r '.name' 2>/dev/null || echo "")
 
             # Validate we got valid values
             if [[ -z "$OWNER" ]] || [[ -z "$REPO_NAME" ]]; then
@@ -249,20 +257,38 @@ else
 fi
 
 # Verify repo exists and is accessible
-if ! verify_repo_exists "$OWNER" "$REPO_NAME"; then
-    print_error "Repository '$OWNER/$REPO_NAME' not found or not accessible."
-    echo "" >&2
-    echo -e "${YELLOW}Possible causes:${NC}" >&2
-    echo "  • The repository doesn't exist" >&2
-    echo "  • You don't have access to it" >&2
-    echo "  • You ran the script from the wrong directory (wrong git repo detected)" >&2
-    echo "" >&2
-    echo -e "${YELLOW}Recommendation:${NC}" >&2
-    echo "  Make sure you're running this from your project root directory." >&2
-    echo "  Or use explicit repo details:" >&2
-    echo "    bash scripts/fetch_pending_comments.sh OWNER REPO $PR_NUMBER" >&2
+verify_repo_status=$(verify_repo_exists "$OWNER" "$REPO_NAME" 2>&1) || {
+    ret=$?
+    case $ret in
+        2)
+            print_error "GitHub authentication failed for repository '$OWNER/$REPO_NAME'."
+            echo "" >&2
+            echo -e "${YELLOW}Solutions:${NC}" >&2
+            echo "  • Authenticate with GitHub: gh auth login" >&2
+            echo "  • Or check your token: gh auth status" >&2
+            ;;
+        3)
+            print_error "GitHub API rate limit exceeded."
+            echo "" >&2
+            echo -e "${YELLOW}Solution:${NC}" >&2
+            echo "  • Wait a few minutes before retrying" >&2
+            ;;
+        *)
+            print_error "Repository '$OWNER/$REPO_NAME' not found or not accessible."
+            echo "" >&2
+            echo -e "${YELLOW}Possible causes:${NC}" >&2
+            echo "  • The repository doesn't exist" >&2
+            echo "  • You don't have access to it" >&2
+            echo "  • You ran the script from the wrong directory (wrong git repo detected)" >&2
+            echo "" >&2
+            echo -e "${YELLOW}Recommendation:${NC}" >&2
+            echo "  Make sure you're running this from your project root directory." >&2
+            echo "  Or use explicit repo details:" >&2
+            echo "    bash scripts/fetch_pending_comments.sh OWNER REPO $PR_NUMBER" >&2
+            ;;
+    esac
     exit 1
-fi
+}
 
 # GraphQL query to fetch unresolved review threads
 QUERY='
@@ -296,9 +322,9 @@ RESPONSE=$(gh api graphql \
     -f query="$QUERY" 2>&1)
 
 # Check for GraphQL errors
-if echo "$RESPONSE" | /usr/bin/jq -e '.errors' >/dev/null 2>&1; then
+if echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1; then
     print_error "GraphQL API returned an error:"
-    echo "$RESPONSE" | /usr/bin/jq '.errors' >&2
+    echo "$RESPONSE" | jq '.errors' >&2
     echo "" >&2
     echo -e "${YELLOW}Common causes:${NC}" >&2
     echo "  • PR #$PR_NUMBER does not exist in $OWNER/$REPO_NAME" >&2
@@ -308,7 +334,7 @@ if echo "$RESPONSE" | /usr/bin/jq -e '.errors' >/dev/null 2>&1; then
 fi
 
 # Filter and format unresolved comments
-PENDING_COUNT=$(echo "$RESPONSE" | /usr/bin/jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
+PENDING_COUNT=$(echo "$RESPONSE" | jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length')
 
 if [[ "$PENDING_COUNT" -eq 0 ]]; then
     print_info "✅ No pending comments found in $OWNER/$REPO_NAME#$PR_NUMBER"
@@ -319,7 +345,7 @@ print_info "📋 Found $PENDING_COUNT pending comment(s) in $OWNER/$REPO_NAME#$P
 echo ""
 
 # Output unresolved comments in a clean format
-echo "$RESPONSE" | /usr/bin/jq -r '
+echo "$RESPONSE" | jq -r '
 .data.repository.pullRequest.reviewThreads.nodes[]
 | select(.isResolved == false)
 | {
