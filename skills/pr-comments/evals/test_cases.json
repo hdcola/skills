@@ -1,0 +1,29 @@
+{
+  "skill_name": "pr-comments",
+  "test_cases": [
+    {
+      "id": 1,
+      "name": "fetch-with-url",
+      "description": "Fetch PR comments using full GitHub URL (most reliable method)",
+      "input": "https://github.com/hugcanada/insurfactapps/pull/216",
+      "expected_output": "Should fetch 4 pending comments from product-type-list.vue and product-generic-type.vue",
+      "command": "bash scripts/fetch_pending_comments.sh https://github.com/hugcanada/insurfactapps/pull/216"
+    },
+    {
+      "id": 2,
+      "name": "fetch-with-explicit-args",
+      "description": "Fetch PR comments using explicit owner/repo/PR format",
+      "input": "hugcanada insurfactapps 216",
+      "expected_output": "Should fetch 4 pending comments, same as test case 1",
+      "command": "bash scripts/fetch_pending_comments.sh hugcanada insurfactapps 216"
+    },
+    {
+      "id": 3,
+      "name": "fetch-from-project-directory",
+      "description": "Fetch PR comments using just PR number from within the project repository",
+      "input": "216 (when run from /Users/hd/work/prj/insurfact/insurfactapps)",
+      "expected_output": "Should fetch 4 pending comments, validating repo context",
+      "command": "cd /Users/hd/work/prj/insurfact/insurfactapps && bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh 216"
+    }
+  ]
+}
