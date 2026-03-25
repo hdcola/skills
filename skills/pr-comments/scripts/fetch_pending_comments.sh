@@ -39,12 +39,20 @@ if [ ! -t 1 ] || [ -n "${NO_COLOR-}" ]; then
     COLOR_ENABLED=false
 fi
 
-# Color codes for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Color codes for output (respect COLOR_ENABLED / NO_COLOR)
+if [ "$COLOR_ENABLED" = true ]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
 
 print_error() {
     if [ "$COLOR_ENABLED" = true ]; then

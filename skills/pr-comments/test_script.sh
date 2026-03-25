@@ -3,10 +3,10 @@
 # Test script for fetch_pending_comments.sh improvements
 # Tests all four input options and error cases
 #
-# Configuration via environment variables:
-#   TEST_REPO_OWNER - GitHub owner (default: hugcanada)
-#   TEST_REPO_NAME  - GitHub repo name (default: insurfactapps)
-#   TEST_PR_NUMBER  - PR number to test with (default: 216)
+# Configuration via environment variables (required):
+#   TEST_REPO_OWNER - GitHub owner (no default, must be set)
+#   TEST_REPO_NAME  - GitHub repo name (no default, must be set)
+#   TEST_PR_NUMBER  - PR number to test with (no default, must be set)
 #
 # Example: TEST_REPO_OWNER=myorg TEST_REPO_NAME=myrepo TEST_PR_NUMBER=42 bash test_script.sh
 

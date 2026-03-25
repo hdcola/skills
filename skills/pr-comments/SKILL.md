@@ -12,10 +12,10 @@ This skill automatically fetches unresolved review comments from GitHub PRs and 
 Invoke the skill with any of these formats — the skill auto-detects and fetches immediately:
 
 ```
-/pr-comments                                                              # From current branch (auto-detects PR & repo)
-/pr-comments 216                                                          # PR number (auto-detects repo)
-/pr-comments https://github.com/owner/repo/pull/123                      # GitHub URL
+/pr-comments                                                              # From current branch (requires git repo)
+/pr-comments https://github.com/owner/repo/pull/123                      # GitHub URL (recommended, works anywhere)
 /pr-comments owner repo 123                                               # Explicit owner/repo/PR#
+/pr-comments 216                                                          # PR number (requires git repo)
 ```
 
 The skill will:
@@ -51,10 +51,10 @@ The skill accepts four formats. Choose based on your situation:
 
 | Option | Example | Dependencies | When to use |
 |--------|---------|-------------|------------|
-| **0** ⭐⭐ | (no arguments) | `gh`, `jq`, `git` | When working on a PR branch (must run from git repo) |
-| **A** ⚠️ | `216` | `gh`, `jq`, `git` — Must run from git repo with a git remote configured | When you know the PR number and are in the project directory |
-| **B** ⭐ | `https://github.com/owner/repo/pull/123` | `gh`, `jq` (no git needed) | **Recommended** — Works anywhere without a git repository |
-| **C** | `owner repo 123` | `gh`, `jq` (no git needed) | When you know the owner/repo details, works anywhere |
+| **Option 0** ⭐⭐ | (no arguments) | `gh`, `jq`, `git` | When working on a PR branch (**requires git repo**) |
+| **Option B** ⭐ | `https://github.com/owner/repo/pull/123` | `gh`, `jq` (no git needed) | **Recommended** — Works anywhere without a git repository |
+| **Option C** | `owner repo 123` | `gh`, `jq` (no git needed) | When you know the owner/repo details, works anywhere |
+| **Option A** ⚠️ | `216` | `gh`, `jq`, `git` (**requires git repo**) | When you know the PR number and are in the project directory |
 
 **Option 0 (Current Branch):**
 - No arguments needed — just run `/pr-comments`
