@@ -1,0 +1,32 @@
+{
+  "skill_name": "pr-comments",
+  "test_cases": [
+    {
+      "id": 1,
+      "name": "fetch-with-url",
+      "description": "Fetch PR comments using full GitHub URL (most reliable method)",
+      "input": "https://github.com/hugcanada/insurfactapps/pull/216",
+      "expected_output": "Output contains 'Found' and 'pending comment(s)' with ID, file path, and author",
+      "notes": "Specific comment count and file names depend on current PR state",
+      "command": "bash scripts/fetch_pending_comments.sh https://github.com/hugcanada/insurfactapps/pull/216"
+    },
+    {
+      "id": 2,
+      "name": "fetch-with-explicit-args",
+      "description": "Fetch PR comments using explicit owner/repo/PR format",
+      "input": "hugcanada insurfactapps 216",
+      "expected_output": "Output format matches test case 1 (same PR, different input format)",
+      "notes": "Validates that different input formats produce equivalent results",
+      "command": "bash scripts/fetch_pending_comments.sh hugcanada insurfactapps 216"
+    },
+    {
+      "id": 3,
+      "name": "fetch-from-project-directory",
+      "description": "Fetch PR comments using PR number from a git repository directory",
+      "input": "216 (when run from project git repository)",
+      "expected_output": "Output matches test case 1 when PR number is valid for repo context",
+      "notes": "Requires TEST_REPO_OWNER and TEST_REPO_NAME to match current directory's repository",
+      "command": "bash <skill-path>/scripts/fetch_pending_comments.sh 216"
+    }
+  ]
+}
