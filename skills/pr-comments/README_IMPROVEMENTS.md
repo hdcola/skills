@@ -103,12 +103,12 @@ bash scripts/fetch_pending_comments.sh 216
 
 ### From anywhere (using URL):
 ```bash
-bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh https://github.com/hugcanada/insurfactapps/pull/216
+bash <skill-path>/scripts/fetch_pending_comments.sh https://github.com/hugcanada/insurfactapps/pull/216
 ```
 
 ### From anywhere (explicit):
 ```bash
-bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh hugcanada insurfactapps 216
+bash <skill-path>/scripts/fetch_pending_comments.sh hugcanada insurfactapps 216
 ```
 
 All three work perfectly now.

@@ -229,7 +229,7 @@ elif [[ $# -eq 1 ]]; then
             echo -e "${YELLOW}Current working directory:${NC} $(pwd)" >&2
             echo -e "${YELLOW}Why this failed:${NC}" >&2
             echo "  • You're not in a git directory, OR" >&2
-            echo "  • The git repository doesn't have a remote origin configured" >&2
+            echo "  • The git repository has no remotes configured" >&2
             echo "" >&2
             echo -e "${YELLOW}Solutions:${NC}" >&2
             echo "  1. Run from your project's root directory (where .git is located)" >&2
