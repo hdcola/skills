@@ -12,7 +12,7 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FETCH_SCRIPT="$SCRIPT_DIR/scripts/fetch_pending_comments.sh"
-TEST_DIR="/tmp/pr_comments_test_$$"
+TEST_DIR="$(mktemp -d /tmp/pr_comments_test_XXXXXX)" || { echo "Error: Failed to create test directory"; exit 1; }
 
 # Configuration with environment variable defaults
 TEST_REPO_OWNER="${TEST_REPO_OWNER:-hugcanada}"

@@ -40,7 +40,7 @@ The script has been redesigned to:
 ```
 ✅ Clear, actionable error messages
 ✅ Script suggests which option to use
-✅ All three options work reliably
+✅ All four options work reliably
 ✅ User can choose what works best
 ✅ Same functionality, better experience
 ```

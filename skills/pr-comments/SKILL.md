@@ -1,6 +1,6 @@
 ---
 name: pr-comments
-description: Fetch unresolved review comments from a GitHub PR or mark comments as resolved. Use this when managing PR review feedback, checking pending comments, or marking review threads as resolved. Supports PR number (auto-detects repo), GitHub URLs, or explicit owner/repo/PR-number.
+description: Fetch unresolved review comments from a GitHub PR or mark comments as resolved. Use this when managing PR review feedback, checking pending comments, or marking review threads as resolved. Supports GitHub URLs or explicit owner/repo/PR-number from anywhere, or PR number auto-detection from within a git repository.
 ---
 
 # GitHub PR Review Comment Manager
@@ -52,17 +52,17 @@ The skill accepts four formats. Choose based on your situation:
 | Option | Example | Dependencies | When to use |
 |--------|---------|-------------|------------|
 | **0** ⭐⭐ | (no arguments) | `gh`, `jq`, `git` | When working on a PR branch (must run from git repo) |
-| **A** ⚠️ | `216` | `gh`, `jq`, `git` — Must run from git repo with remote origin configured | When you know the PR number and are in the project directory |
+| **A** ⚠️ | `216` | `gh`, `jq`, `git` — Must run from git repo with a git remote configured | When you know the PR number and are in the project directory |
 | **B** ⭐ | `https://github.com/owner/repo/pull/123` | `gh`, `jq` (no git needed) | **Recommended** — Works anywhere without a git repository |
 | **C** | `owner repo 123` | `gh`, `jq` (no git needed) | When you know the owner/repo details, works anywhere |
 
 **Option 0 (Current Branch):**
 - No arguments needed — just run `/pr-comments`
 - Queries GitHub for the PR associated with your current branch
-- **Requires:** Must run from project root (a git repo with remote origin)
+- **Requires:** Must run from project root (a git repo with a git remote configured)
 - **Most convenient** for developers actively working on a PR
 
-**Key Point:** Options 0 and A both require running from a git repository with a configured remote origin. For maximum portability, use Option B (GitHub URL) or C (explicit owner/repo).
+**Key Point:** Options 0 and A both require running from a git repository with a configured git remote. For maximum portability, use Option B (GitHub URL) or C (explicit owner/repo).
 
 **Why Option A can fail:**
 - If you run the script from a directory inside a monorepo or nested git structure, auto-detection might find the wrong repository

@@ -211,11 +211,11 @@ if [[ $# -eq 0 ]]; then
 
 elif [[ $# -eq 1 ]]; then
     INPUT="$1"
-    # Case 1: GitHub URL
-    if [[ $INPUT =~ github\.com/([^/]+)/([^/]+)/pull/([0-9]+) ]]; then
-        OWNER="${BASH_REMATCH[1]}"
-        REPO_NAME="${BASH_REMATCH[2]}"
-        PR_NUMBER="${BASH_REMATCH[3]}"
+    # Case 1: GitHub PR URL
+    if [[ $INPUT =~ ^https?://(www\.)?github\.com/([^/]+)/([^/]+)/pull/([0-9]+)(\?.*)?$ ]]; then
+        OWNER="${BASH_REMATCH[2]}"
+        REPO_NAME="${BASH_REMATCH[3]}"
+        PR_NUMBER="${BASH_REMATCH[4]}"
     # Case 2: Numeric PR number only - auto-detect repo (requires git)
     elif [[ $INPUT =~ ^[0-9]+$ ]]; then
         PR_NUMBER="$INPUT"

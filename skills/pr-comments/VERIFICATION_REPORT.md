@@ -38,8 +38,8 @@
 [ℹ INFO] TEST: 6. Test invalid number of arguments
 ✓ PASS: Error handling: Invalid argument count rejected
 
-[ℹ INFO] TEST: 7. Test no arguments
-✓ PASS: Error handling: No arguments shows help
+[ℹ INFO] TEST: 7. Test no arguments outside git repo
+✓ PASS: Error handling: No arguments outside git repo shows error with guidance
 
 [ℹ INFO] TEST: 8. Test malformed URL
 ✓ PASS: Error handling: Malformed URL rejected

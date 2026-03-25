@@ -80,7 +80,7 @@ Created comprehensive test suite (`test_script.sh`) covering:
 ✅ Test 4: Option A with auto-detection (git repo) - ✓ PASS
 ✅ Test 5: Invalid PR number format - ✓ PASS
 ✅ Test 6: Invalid argument count - ✓ PASS
-✅ Test 7: No arguments shows help - ✓ PASS
+✅ Test 7: No arguments outside git repo shows error with guidance - ✓ PASS
 ✅ Test 8: Malformed URL rejection - ✓ PASS
 
 **Result: 8/8 tests passing (100%)**
@@ -89,7 +89,7 @@ Created comprehensive test suite (`test_script.sh`) covering:
 
 | Aspect | Before | After |
 |--------|--------|-------|
-| Works from any directory | ❌ | ✅ |
+| Has an invocation mode that works from any directory (B/C) | ❌ | ✅ |
 | Clear error messages | ⚠️ (verbose) | ✅ (concise) |
 | Code complexity | 50 lines of parsing | 25 lines of parsing |
 | Option A reliability | Fragile | Robust with graceful fallback |
