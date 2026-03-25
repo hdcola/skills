@@ -15,9 +15,19 @@ FETCH_SCRIPT="$SCRIPT_DIR/scripts/fetch_pending_comments.sh"
 TEST_DIR="$(mktemp -d /tmp/pr_comments_test_XXXXXX)" || { echo "Error: Failed to create test directory"; exit 1; }
 
 # Configuration with environment variable defaults
-TEST_REPO_OWNER="${TEST_REPO_OWNER:-hugcanada}"
-TEST_REPO_NAME="${TEST_REPO_NAME:-insurfactapps}"
-TEST_PR_NUMBER="${TEST_PR_NUMBER:-216}"
+# Note: These are example defaults. For reproducible tests across different environments,
+# set these variables explicitly: TEST_REPO_OWNER=myorg TEST_REPO_NAME=myrepo TEST_PR_NUMBER=42
+TEST_REPO_OWNER="${TEST_REPO_OWNER:-}"
+TEST_REPO_NAME="${TEST_REPO_NAME:-}"
+TEST_PR_NUMBER="${TEST_PR_NUMBER:-}"
+
+# Validate that test repo is specified
+if [ -z "$TEST_REPO_OWNER" ] || [ -z "$TEST_REPO_NAME" ] || [ -z "$TEST_PR_NUMBER" ]; then
+    echo "Error: Test repository details not specified." >&2
+    echo "Please set environment variables: TEST_REPO_OWNER, TEST_REPO_NAME, TEST_PR_NUMBER" >&2
+    echo "Example: TEST_REPO_OWNER=myorg TEST_REPO_NAME=myrepo TEST_PR_NUMBER=42 bash test_script.sh" >&2
+    exit 1
+fi
 
 # Colors for output
 PASS='\033[0;32m'

@@ -18,7 +18,7 @@ From the skill directory, it would fail with **"Exit code 1"** and unclear error
 The script has been redesigned to:
 
 1. **Be more intelligent about context detection** - Instead of failing immediately when not in a git repo, it now gracefully guides you to alternative options
-2. **Simplify the code** - Removed unnecessary complexity (40% code reduction)
+2. **Improve error handling** - Removed unnecessary complexity (simplified argument parsing logic)
 3. **Provide better error messages** - Errors now clearly explain what went wrong and how to fix it
 4. **Support all four options**:
    - Option 0: (no arguments) - Current branch PR lookup - Works in git repo
@@ -51,7 +51,7 @@ The script has been redesigned to:
 - **`scripts/fetch_pending_comments.sh`** - Simplified and improved
   - Removed unnecessary `validate_repo_context()` function
   - Better error handling (4 clear paths vs 8+ scattered error exits)
-  - 40% less code while being more robust
+  - Improved error handling and robustness
   - Updated usage documentation
 
 ### New

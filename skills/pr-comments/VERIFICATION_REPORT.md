@@ -105,10 +105,10 @@ $ bash <skill-path>/scripts/fetch_pending_comments.sh hugcanada insurfactapps 21
 
 ### Complexity Reduction
 
-**Lines of code (argument parsing section):**
-- Before: ~90 lines (with validate_repo_context)
-- After: ~55 lines
-- **Reduction: 39%**
+**Code improvements:**
+- Simplified argument parsing logic
+- Consolidated error handling into clear paths
+- Improved maintainability with better separation of concerns
 
 **Functions:**
 - Before: 3 helper functions

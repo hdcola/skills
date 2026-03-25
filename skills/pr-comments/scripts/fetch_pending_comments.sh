@@ -382,7 +382,7 @@ if ! RESPONSE=$(gh api graphql \
 fi
 
 # Check for GraphQL errors in the response
-if echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1; then
+if echo "$RESPONSE" | jq -e '(.errors // []) | length > 0' >/dev/null 2>&1; then
     print_error "GraphQL API returned an error:"
     echo "$RESPONSE" | jq '.errors' >&2
     echo "" >&2
