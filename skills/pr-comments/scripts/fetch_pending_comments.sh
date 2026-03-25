@@ -79,6 +79,7 @@ Usage:
 
   Option A (PR number):      fetch_pending_comments.sh 216
                              (⭐ RECOMMENDED - auto-detects repo)
+                             (must run from inside a git repo)
 
   Option B (GitHub URL):     fetch_pending_comments.sh https://github.com/owner/repo/pull/123
                              (explicit, works from anywhere)
@@ -397,13 +398,13 @@ if echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1; then
 fi
 
 # Check if the PR itself exists (pullRequest can be null even without GraphQL errors)
-if echo "$RESPONSE" | jq -e '.data.repository.pullRequest' >/dev/null 2>&1; then
-    if [ "$(echo "$RESPONSE" | jq -r '.data.repository.pullRequest')" = "null" ]; then
-        print_error "PR #$PR_NUMBER does not exist in $OWNER/$REPO_NAME"
-        exit 1
-    fi
-else
+PULL_REQUEST_VALUE=$(echo "$RESPONSE" | jq '.data.repository.pullRequest' 2>/dev/null || echo "")
+if [ -z "$PULL_REQUEST_VALUE" ]; then
     print_error "Could not retrieve PR information from GitHub API"
+    exit 1
+fi
+if [ "$PULL_REQUEST_VALUE" = "null" ]; then
+    print_error "PR #$PR_NUMBER does not exist in $OWNER/$REPO_NAME"
     exit 1
 fi
 

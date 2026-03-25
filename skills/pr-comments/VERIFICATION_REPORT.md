@@ -72,7 +72,7 @@ Tests failed: 0
 
 **Real Test:**
 ```bash
-$ bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh 216
+$ bash <skill-path>/scripts/fetch_pending_comments.sh 216
 📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216
 
 ID: PRRT_kwDOQFTPGc52cAm4 | apps/IFCAdmin/app/pages/admin/maintenance/product-type-list.vue:36-44 | @copilot-pull-request-reviewer: [comment...]
@@ -85,7 +85,7 @@ ID: PRRT_kwDOQFTPGc52cAm4 | apps/IFCAdmin/app/pages/admin/maintenance/product-ty
 
 **Test Result:**
 ```bash
-$ bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh "https://github.com/hugcanada/insurfactapps/pull/216"
+$ bash <skill-path>/scripts/fetch_pending_comments.sh "https://github.com/hugcanada/insurfactapps/pull/216"
 📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216
 [... comments retrieved successfully ...]
 ```
@@ -96,7 +96,7 @@ $ bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh "h
 
 **Test Result:**
 ```bash
-$ bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh hugcanada insurfactapps 216
+$ bash <skill-path>/scripts/fetch_pending_comments.sh hugcanada insurfactapps 216
 📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216
 [... comments retrieved successfully ...]
 ```
