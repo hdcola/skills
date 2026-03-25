@@ -116,11 +116,10 @@ $ bash scripts/fetch_pending_comments.sh hugcanada insurfactapps 216
 📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216
 ```
 
-### Example 3: From /tmp or anywhere else
+### Example 3: From anywhere else
 ```bash
-$ cd /tmp
-$ bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh https://github.com/hugcanada/insurfactapps/pull/216
-📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216
+$ bash <skill-path>/scripts/fetch_pending_comments.sh https://github.com/owner/repo/pull/216
+📋 Found 4 pending comment(s) in owner/repo#216
 ```
 
 ---
