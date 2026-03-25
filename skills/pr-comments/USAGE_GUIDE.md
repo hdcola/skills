@@ -92,16 +92,16 @@ bash scripts/fetch_pending_comments.sh hugcanada insurfactapps 216
 ### Example 1: From the repo root
 ```bash
 $ pwd
-/Users/hd/work/prj/insurfact/insurfactapps
+<home>/work/prj/your-project
 
-$ bash /Users/hd/.claude/skills/pr-comments/scripts/fetch_pending_comments.sh 216
-📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216
+$ bash <skill-path>/scripts/fetch_pending_comments.sh 216
+📋 Found 4 pending comment(s) in owner/repo#216
 ```
 
 ### Example 2: From the skill directory
 ```bash
 $ pwd
-/Users/hd/.claude/skills/pr-comments
+<skill-path>
 
 # Option A won't work - gives helpful error
 $ bash scripts/fetch_pending_comments.sh 216
@@ -167,6 +167,7 @@ gh auth login
 
 | Option | Syntax | Works from anywhere? | Requires git repo? |
 |--------|--------|----------------------|-------------------|
+| 0 | `bash fetch_pending_comments.sh` | ❌ | ✅ |
 | A | `bash fetch_pending_comments.sh 216` | ❌ | ✅ |
 | B | `bash fetch_pending_comments.sh https://github.com/o/r/pull/216` | ✅ | ❌ |
 | C | `bash fetch_pending_comments.sh owner repo 216` | ✅ | ❌ |
@@ -175,7 +176,7 @@ gh auth login
 
 ## Output Format
 
-All three options produce the same output:
+All four options produce the same output:
 
 ```
 📋 Found 4 pending comment(s) in hugcanada/insurfactapps#216

@@ -54,14 +54,6 @@ print_error() {
     fi
 }
 
-print_warning() {
-    if [ "$COLOR_ENABLED" = true ]; then
-        echo -e "${YELLOW}⚠️  Warning: $1${NC}" >&2
-    else
-        echo "⚠️  Warning: $1" >&2
-    fi
-}
-
 print_info() {
     if [ "$COLOR_ENABLED" = true ]; then
         echo -e "${GREEN}$1${NC}"
@@ -310,7 +302,7 @@ else
 fi
 
 # Verify repo exists and is accessible
-verify_repo_status=$(verify_repo_exists "$OWNER" "$REPO_NAME" 2>&1) || {
+verify_repo_exists "$OWNER" "$REPO_NAME" >/dev/null 2>&1 || {
     ret=$?
     case $ret in
         2)
