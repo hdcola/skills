@@ -91,7 +91,7 @@ bash <skill-path>/scripts/fetch_pending_comments.sh <user-input>
 
 **Why this matters:** When using Option A (PR number only), the script auto-detects the repository by running `git rev-parse --git-dir` and `gh repo view`. If run from a non-project directory, git may find the wrong repository, causing auto-detection to fail. The script will detect this and suggest using Option B (GitHub URL) or C (explicit owner/repo) instead, but execution from the project root eliminates this issue entirely.
 
-This works for all three input formats — the script handles the detection internally.
+This works for all four input formats — the script handles the detection internally.
 
 ---
 

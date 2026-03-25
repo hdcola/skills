@@ -9,6 +9,29 @@
 
 set -euo pipefail
 
+# Check for required dependencies
+for cmd in gh git jq; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo "❌ Error: '$cmd' is not installed or not in PATH." >&2
+        echo "" >&2
+        if [ "$cmd" = "gh" ]; then
+            echo "Install GitHub CLI: https://cli.github.com" >&2
+            echo "Or authenticate: gh auth login" >&2
+        elif [ "$cmd" = "git" ]; then
+            echo "Install Git: https://git-scm.com/downloads" >&2
+        elif [ "$cmd" = "jq" ]; then
+            echo "Install jq: https://stedolan.github.io/jq/download/" >&2
+        fi
+        exit 1
+    fi
+done
+
+# Determine whether to use colors in output
+COLOR_ENABLED=true
+if [ ! -t 1 ] || [ -n "${NO_COLOR-}" ]; then
+    COLOR_ENABLED=false
+fi
+
 # Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -17,19 +40,35 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 print_error() {
-    echo -e "${RED}❌ Error: $1${NC}" >&2
+    if [ "$COLOR_ENABLED" = true ]; then
+        echo -e "${RED}❌ Error: $1${NC}" >&2
+    else
+        echo "❌ Error: $1" >&2
+    fi
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠️  Warning: $1${NC}" >&2
+    if [ "$COLOR_ENABLED" = true ]; then
+        echo -e "${YELLOW}⚠️  Warning: $1${NC}" >&2
+    else
+        echo "⚠️  Warning: $1" >&2
+    fi
 }
 
 print_info() {
-    echo -e "${GREEN}$1${NC}"
+    if [ "$COLOR_ENABLED" = true ]; then
+        echo -e "${GREEN}$1${NC}"
+    else
+        echo "$1"
+    fi
 }
 
 print_debug() {
-    echo -e "${BLUE}ℹ️  $1${NC}" >&2
+    if [ "$COLOR_ENABLED" = true ]; then
+        echo -e "${BLUE}ℹ️  $1${NC}" >&2
+    else
+        echo "ℹ️  $1" >&2
+    fi
 }
 
 print_help() {
@@ -37,7 +76,7 @@ print_help() {
 Usage:
   Option 0 (current branch): fetch_pending_comments.sh
                              (queries the PR for your current branch)
-                             (must run from project root)
+                             (must run from inside a git repo with a remote configured)
 
   Option A (PR number):      fetch_pending_comments.sh 216
                              (⭐ RECOMMENDED - auto-detects repo)
@@ -57,9 +96,12 @@ validate_git_context() {
         return 1
     fi
 
-    # Check if remote origin is configured
-    if ! git config --get remote.origin.url > /dev/null 2>&1; then
-        return 1
+    # Check if any remote is configured (origin, upstream, or others)
+    if ! git remote >/dev/null 2>&1 || [ -z "$(git remote 2>/dev/null)" ]; then
+        # Try fallback: let gh determine the repo context
+        if ! gh repo view >/dev/null 2>&1; then
+            return 1
+        fi
     fi
 
     return 0
@@ -314,19 +356,37 @@ query($owner: String!, $name: String!, $pullNumber: Int!) {
   }
 }'
 
-# Fetch data
-RESPONSE=$(gh api graphql \
+# Fetch data - capture both stdout and exit code
+if ! RESPONSE=$(gh api graphql \
     -F owner="$OWNER" \
     -F name="$REPO_NAME" \
     -F pullNumber="$PR_NUMBER" \
-    -f query="$QUERY" 2>&1)
+    -f query="$QUERY" 2>&1); then
+    # gh command failed (auth, network, CLI error)
+    print_error "GitHub API request failed:"
+    echo "$RESPONSE" >&2
+    echo "" >&2
+    echo -e "${YELLOW}Possible causes:${NC}" >&2
+    echo "  • Authentication failed or expired" >&2
+    echo "  • Network connection issue" >&2
+    echo "  • GitHub API outage" >&2
+    echo "" >&2
+    echo -e "${YELLOW}Try:${NC}" >&2
+    echo "  • Verify authentication: gh auth status" >&2
+    echo "  • Re-authenticate: gh auth login" >&2
+    exit 1
+fi
 
-# Check for GraphQL errors
+# Check for GraphQL errors in the response
 if echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1; then
     print_error "GraphQL API returned an error:"
     echo "$RESPONSE" | jq '.errors' >&2
     echo "" >&2
-    echo -e "${YELLOW}Common causes:${NC}" >&2
+    if [ "$COLOR_ENABLED" = true ]; then
+        echo -e "${YELLOW}Common causes:${NC}" >&2
+    else
+        echo "Common causes:" >&2
+    fi
     echo "  • PR #$PR_NUMBER does not exist in $OWNER/$REPO_NAME" >&2
     echo "  • Authentication failed (verify with: gh auth status)" >&2
     echo "  • Rate limit exceeded" >&2

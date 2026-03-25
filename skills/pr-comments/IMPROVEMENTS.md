@@ -21,7 +21,7 @@ The original `fetch_pending_comments.sh` script had three main issues:
 - Queries GitHub for the PR associated with that branch
 - Auto-detects owner/repo like Option A does
 
-**Result**: Three convenient ways to invoke the skill:
+**Result**: Four convenient ways to invoke the skill:
 - **Option 0 (Most Convenient)**: `/pr-comments` — works from a git repo with an active PR
 - **Option A**: `/pr-comments 216` — works from a git repo, specify PR number
 - **Option B (Most Portable)**: `/pr-comments https://github.com/owner/repo/pull/123` — works anywhere
@@ -61,12 +61,13 @@ Use one of these instead:
 
 ### 4. Updated Documentation
 
-The usage comment now correctly reflects all three working modes:
+The usage comment now correctly reflects all four working modes:
 ```bash
 # Usage:
-#   fetch_pending_comments.sh PR_NUMBER              (auto-detect repo, works from anywhere)
-#   fetch_pending_comments.sh https://github.com/owner/repo/pull/123
-#   fetch_pending_comments.sh OWNER REPO PR_NUMBER
+#   fetch_pending_comments.sh                         # Option 0: current branch PR (requires git repo)
+#   fetch_pending_comments.sh PR_NUMBER               # Option A: auto-detect repo (requires git repo)
+#   fetch_pending_comments.sh https://github.com/owner/repo/pull/123  # Option B: GitHub URL (works anywhere)
+#   fetch_pending_comments.sh OWNER REPO PR_NUMBER    # Option C: explicit owner/repo/PR (works anywhere)
 ```
 
 ## Test Results

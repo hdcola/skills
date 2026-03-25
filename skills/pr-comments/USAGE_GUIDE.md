@@ -2,9 +2,31 @@
 
 Quick reference for fetching pending review comments from GitHub PRs.
 
-## Three Ways to Use
+## Four Ways to Use
 
-### Option A: PR Number Only (Recommended)
+### Option 0: Current Branch (Most Convenient)
+**Best for:** Working on an active PR branch
+
+```bash
+bash scripts/fetch_pending_comments.sh
+```
+
+**Requirements:**
+- Must be run from within the git repository directory
+- The current branch must have an associated PR on GitHub
+
+**Pros:**
+- No arguments needed
+- Automatically finds the PR for your current branch
+- Fastest to use when actively working on a PR
+
+**When to use this:**
+✅ You're working on a branch with an open PR
+✅ You want the quickest command possible
+
+---
+
+### Option A: PR Number Only (Recommended for git repos)
 **Best for:** Users already in the repository
 
 ```bash

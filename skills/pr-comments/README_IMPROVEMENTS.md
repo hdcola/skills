@@ -20,7 +20,8 @@ The script has been redesigned to:
 1. **Be more intelligent about context detection** - Instead of failing immediately when not in a git repo, it now gracefully guides you to alternative options
 2. **Simplify the code** - Removed unnecessary complexity (40% code reduction)
 3. **Provide better error messages** - Errors now clearly explain what went wrong and how to fix it
-4. **Maintain all three options**:
+4. **Support all four options**:
+   - Option 0: (no arguments) - Current branch PR lookup - Works in git repo
    - Option A: `216` (PR number only) - Auto-detect in git repo
    - Option B: `https://github.com/owner/repo/pull/216` (URL) - Works anywhere
    - Option C: `owner repo 216` (Explicit) - Works anywhere

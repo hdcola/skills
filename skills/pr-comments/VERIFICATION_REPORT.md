@@ -14,7 +14,7 @@
 ### Test Environment
 - **Location**: `/tmp/pr_comments_test_<pid>`
 - **Date**: 2026-03-25
-- **Script**: `/Users/hd/.claude/skills/pr-comments/test_script.sh`
+- **Script**: `skills/pr-comments/test_script.sh`
 - **Test Coverage**: 8 test cases covering all usage scenarios + error handling
 
 ### Test Results
