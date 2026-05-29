@@ -76,9 +76,13 @@ When you invoke `/pr-comments`, Claude should:
 
 1. **Ensure correct working directory** — **CRITICAL**: Change to the project root (the directory containing `.git`) before executing the script. This is required for auto-detection to work correctly.
 2. **Parse the user's input** — Extract the PR identifier in whatever format they provided
-3. **Auto-fetch immediately** — Run the appropriate fetch script without asking for confirmation (fetching is read-only and safe)
-4. **Display results** — Show pending comments with thread IDs
-5. **Offer next steps** — Explain how to resolve threads if there are any pending
+3. **Handle Plan Mode Fast-Track** — If you are currently in a planning phase (e.g., Plan Mode in Gemini CLI) where shell execution is not permitted:
+   - IMMEDIATELY create a minimal plan that only contains the execution of the `fetch_pending_comments.sh` script.
+   - Call the tool to exit the planning phase (`exit_plan_mode`) immediately without asking for further clarification or adding complex implementation steps.
+   - Once out of the planning phase, proceed to execute the script.
+4. **Auto-fetch immediately** — Run the appropriate fetch script without asking for confirmation (fetching is read-only and safe)
+5. **Display results** — Show pending comments with thread IDs
+6. **Offer next steps** — Explain how to resolve threads if there are any pending
 
 **Implementation detail:** The skill must execute from the project root:
 ```bash
