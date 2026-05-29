@@ -1,0 +1,23 @@
+{
+  "skill_name": "ufile-slips",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "在 UFile 里创建一个 T3 凭单，发行人为 CIBC，Box 21 为 250.00，Box 26 为 100.00，Box 42 为 1500.00",
+      "expected_output": "成功创建并填充一个 T3 (CIBC) 凭单",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "在 UFile 里创建一个 T5 凭单，发行人为 RBC，Box 13 为 555.00，Box 15 为 888.00，Box 24 为 666.00",
+      "expected_output": "成功创建并填充一个 T5 (RBC) 凭单",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "将 UFile 中所有的 T3 和 T5 导出，保存到 filled.txt 中，然后删除所有这些凭单",
+      "expected_output": "将 T3 和 T5 导出至 filled.txt 并完成删除",
+      "files": []
+    }
+  ]
+}
